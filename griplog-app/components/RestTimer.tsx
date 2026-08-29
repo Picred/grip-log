@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, Vibration, View } from 'react-native';
+import { Timer, Play, Pause } from 'lucide-react-native';
 
 const REST_OPTIONS = [30, 60, 90, 120, 180];
 
@@ -32,38 +33,70 @@ export default function RestTimer() {
   }, [secondsLeft]);
 
   return (
-    <View className="absolute bottom-24 right-4 w-52 rounded-2xl border border-orange-500/50 bg-slate-900/95 p-3 shadow-lg">
-      <Text className="mb-2 text-xs uppercase tracking-[2px] text-slate-400">Rest timer</Text>
-      <Text className="mb-2 text-3xl font-bold text-white">{label}</Text>
+    <View className="absolute bottom-24 right-4 w-64 overflow-hidden rounded-[32px] border border-white/5 bg-[#0B1220] shadow-2xl">
+      {/* Top accent line */}
+      <View className="h-[3px] w-full bg-amber-500 opacity-90" />
+      
+      <View className="p-5">
+        <View className="mb-4 flex-row items-center justify-between">
+          <View className="flex-row items-center gap-2">
+            <View className="rounded-full bg-amber-500/10 p-1.5">
+              <Timer size={14} color="#f59e0b" />
+            </View>
+            <Text className="text-[10px] font-bold uppercase tracking-[2px] text-slate-400">Rest Timer</Text>
+          </View>
+          <Text className="text-3xl font-black tabular-nums tracking-tight text-white">{label}</Text>
+        </View>
 
-      <View className="mb-2 flex-row flex-wrap gap-1">
-        {REST_OPTIONS.map((option) => (
-          <Pressable
-            key={option}
-            onPress={() => {
-              setSelectedSeconds(option);
-              setSecondsLeft(option);
-              setRunning(false);
-            }}
-            className={`rounded-full px-2 py-1 ${selectedSeconds === option ? 'bg-orange-500' : 'bg-slate-700'}`}
-          >
-            <Text className="text-xs font-semibold text-white">{option}s</Text>
-          </Pressable>
-        ))}
+        {/* Progress bar */}
+        <View className="mb-5 h-1.5 w-full overflow-hidden rounded-full bg-slate-800/80">
+          <View 
+            className="h-full rounded-full bg-amber-500" 
+            style={{ width: `${(secondsLeft / selectedSeconds) * 100}%` }} 
+          />
+        </View>
+
+        <View className="mb-5 flex-row flex-wrap justify-between gap-1.5">
+          {REST_OPTIONS.map((option) => (
+            <Pressable
+              key={option}
+              onPress={() => {
+                setSelectedSeconds(option);
+                setSecondsLeft(option);
+                setRunning(false);
+              }}
+              className={`flex-1 min-w-[36px] items-center rounded-xl py-2 border ${
+                selectedSeconds === option 
+                  ? 'bg-amber-500/10 border-amber-500/50' 
+                  : 'bg-slate-800/40 border-slate-700/40'
+              }`}
+            >
+              <Text className={`text-[11px] font-bold ${
+                selectedSeconds === option ? 'text-amber-400' : 'text-slate-400'
+              }`}>{option}s</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <Pressable
+          onPress={() => setRunning(!running)}
+          className={`flex-row items-center justify-center gap-2 rounded-2xl py-3.5 shadow-sm active:opacity-80 ${
+            running ? 'bg-slate-800 border border-slate-700' : 'bg-amber-500'
+          }`}
+        >
+          {running ? (
+            <>
+              <Pause size={16} color="#e2e8f0" fill="#e2e8f0" />
+              <Text className="text-sm font-bold text-slate-200">Pausa Timer</Text>
+            </>
+          ) : (
+            <>
+              <Play size={16} color="#020617" fill="#020617" />
+              <Text className="text-sm font-bold text-slate-950">Avvia Timer</Text>
+            </>
+          )}
+        </Pressable>
       </View>
-
-      <Pressable
-        onPress={() => {
-          if (running) {
-            setRunning(false);
-            return;
-          }
-          setRunning(true);
-        }}
-        className="rounded-xl bg-orange-500 p-2"
-      >
-        <Text className="text-center font-semibold text-white">{running ? 'Pausa' : 'Avvia'}</Text>
-      </Pressable>
     </View>
   );
 }

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-
-import { getExerciseCatalog } from '../services/database';
+import { Search, X, ChevronRight } from 'lucide-react-native';
 
 export type ExercisePickerSheetProps = {
   visible: boolean;
@@ -34,35 +33,56 @@ export default function ExercisePickerSheet({ visible, onClose, onSelect }: Exer
 
   return (
     <Modal transparent visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 justify-end bg-black/50">
-        <View className="rounded-t-3xl bg-slate-900 p-5">
-          <View className="mb-4 flex-row items-center justify-between">
-            <Text className="text-xl font-bold text-white">Seleziona esercizio</Text>
-            <Pressable onPress={onClose}>
-              <Text className="text-orange-400">Chiudi</Text>
+      <View className="flex-1 justify-end bg-slate-950/80 backdrop-blur-sm">
+        <View className="rounded-t-[40px] border-t border-white/10 bg-[#0B1220] p-6 pb-12 shadow-2xl">
+          
+          {/* Drag Handle */}
+          <View className="mb-6 items-center">
+            <View className="h-1.5 w-12 rounded-full bg-slate-800" />
+          </View>
+
+          <View className="mb-6 flex-row items-center justify-between">
+            <Text className="text-2xl font-black tracking-tight text-white">Catalogo</Text>
+            <Pressable onPress={onClose} className="rounded-full bg-slate-800/80 p-2 border border-slate-700/50 active:bg-slate-700">
+              <X size={20} color="#94a3b8" />
             </Pressable>
           </View>
 
-          <TextInput
-            className="mb-4 rounded-xl border border-slate-700 bg-slate-800 p-3 text-white"
-            placeholder="Cerca esercizio"
-            value={query}
-            onChangeText={setQuery}
-          />
+          <View className="mb-5 flex-row items-center rounded-2xl border border-slate-800 bg-[#0f172a] px-4 py-1">
+            <Search size={18} color="#64748b" />
+            <TextInput
+              className="flex-1 px-3 py-3 text-base text-white"
+              placeholder="Cerca esercizio..."
+              placeholderTextColor="#64748b"
+              value={query}
+              onChangeText={setQuery}
+            />
+            {query.length > 0 && (
+              <Pressable onPress={() => setQuery('')}>
+                <X size={16} color="#64748b" />
+              </Pressable>
+            )}
+          </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4">
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-6 max-h-[44px]">
             {muscleGroups.map((group) => (
               <Pressable
                 key={group}
                 onPress={() => setMuscleFilter(group)}
-                className={`mr-2 rounded-full px-3 py-2 ${muscleFilter === group ? 'bg-orange-500' : 'bg-slate-700'}`}
+                className={`mr-2 items-center justify-center rounded-full px-5 py-2.5 border ${
+                  muscleFilter === group 
+                    ? 'bg-amber-500/10 border-amber-500/50' 
+                    : 'bg-slate-800/40 border-slate-700/40'
+                }`}
               >
-                <Text className="text-sm text-white">{group}</Text>
+                <Text className={`text-sm font-bold tracking-[0.5px] ${
+                  muscleFilter === group ? 'text-amber-400' : 'text-slate-400'
+                }`}>{group}</Text>
               </Pressable>
             ))}
           </ScrollView>
 
-          <ScrollView className="max-h-80">
+          <ScrollView className="max-h-[400px]" showsVerticalScrollIndicator={false}>
             {filtered.map((exercise) => (
               <Pressable
                 key={exercise.id}
@@ -70,15 +90,24 @@ export default function ExercisePickerSheet({ visible, onClose, onSelect }: Exer
                   onSelect(exercise);
                   onClose();
                 }}
-                className="mb-2 rounded-xl border border-slate-700 bg-slate-800 p-3"
+                className="mb-3 flex-row items-center justify-between rounded-[24px] border border-slate-800/60 bg-[#0f172a] p-4 active:bg-slate-800/80"
               >
-                <Text className="font-semibold text-white">{exercise.name}</Text>
-                <Text className="text-sm text-slate-400">{exercise.muscle_group}</Text>
+                <View>
+                  <Text className="text-lg font-bold text-white">{exercise.name}</Text>
+                  <Text className="mt-1 text-xs font-semibold uppercase tracking-[1px] text-slate-500">{exercise.muscle_group}</Text>
+                </View>
+                <View className="rounded-full bg-slate-800 p-2">
+                  <ChevronRight size={16} color="#94a3b8" />
+                </View>
               </Pressable>
             ))}
 
             {filtered.length === 0 && (
-              <Text className="text-center text-slate-400">Nessun esercizio trovato.</Text>
+              <View className="mt-10 items-center justify-center">
+                <Search size={32} color="#334155" />
+                <Text className="mt-4 text-center text-lg font-bold text-slate-400">Nessun risultato</Text>
+                <Text className="mt-1 text-center text-sm font-medium text-slate-500">Prova a cercare con un altro termine.</Text>
+              </View>
             )}
           </ScrollView>
         </View>

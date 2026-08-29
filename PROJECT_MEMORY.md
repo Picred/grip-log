@@ -8,6 +8,7 @@
 - Il layer SQLite locale è stato introdotto con schema mirror, catalogo esercizi standard e logica di sincronizzazione offline-first.
 - La UI di workout live, cronologia e profilo sync monitor è stata costruita in modo funzionale.
 - Gli Step 2, 3 e 4 sono stati validati con `npx tsc --noEmit` senza errori.
+- **RESTYLE GRAFICO:** Tutta l'app è stata aggiornata con una grafica "premium" dark (`#0B1220`), design a card fluttuanti e icone Lucide. Risolto un bug critico di NativeWind nel `babel.config.js` che impediva il rendering su Web.
 
 ## Architettura target
 - App Android mobile per workout tracking offline-first.
@@ -30,11 +31,11 @@
 2. Backend Supabase, auth e schema base (completato nello Step 2).
 3. Database locale SQLite e sync engine offline-first (completato nello Step 3).
 4. UI live workout, catalogo, timer e storico (completato nello Step 4).
-5. Configurazione Android, build e validazione finale.
+5. Configurazione Android, build e validazione finale. (In progress: UI validata).
 
 ## Debito tecnico e note
 - La UI live workout è pronta per l’uso locale e il salvataggio persistente in SQLite.
-- Il timer di recupero è pronto per miglioramenti UX in base al test reale su device.
+- Il timer di recupero è pronto per miglioramenti UX in base al test reale su device (Aggiornato con barra circolare/progresso in UI premium).
 - La build Android è configurata per distribuire preview e production con EAS.
 - La configurazione finale del bundle `com.picred.griplog` è pronta per il deployment mobile.
 

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Activity, Plus, Check, Trash2, Dumbbell } from 'lucide-react-native';
 
 import ExercisePickerSheet from '../../components/ExercisePickerSheet';
 import RestTimer from '../../components/RestTimer';
@@ -150,84 +151,121 @@ export default function WorkoutScreen() {
   };
 
   return (
-    <View className="flex-1 bg-slate-950 px-4 pb-32 pt-8">
-      <Text className="mb-4 text-3xl font-bold text-white">Workout</Text>
-      <View className="mb-4 flex-row items-center justify-between rounded-2xl border border-slate-700 bg-slate-900 p-4">
-        <View>
-          <Text className="text-slate-400">Volume totale</Text>
-          <Text className="text-2xl font-bold text-orange-400">{totalVolume.toFixed(0)} kg</Text>
-        </View>
-        <Pressable onPress={() => setExercisePickerOpen(true)} className="rounded-xl bg-orange-500 px-4 py-3">
-          <Text className="font-semibold text-white">Aggiungi esercizio</Text>
-        </Pressable>
+    <View className="flex-1 bg-slate-950 px-5 pb-32 pt-12">
+      <View className="mb-6">
+        <Text className="mb-1 text-[11px] font-bold uppercase tracking-[3px] text-amber-500">Live Workout</Text>
+        <Text className="text-4xl font-black tracking-tight text-white">Sessione</Text>
       </View>
 
-      <ScrollView className="flex-1">
-        {exercises.map((exercise) => (
-          <View key={exercise.id} className="mb-4 rounded-2xl border border-slate-700 bg-slate-900 p-4">
-            <Text className="text-xl font-bold text-white">{exercise.name}</Text>
-            <Text className="mb-3 text-sm text-slate-400">{exercise.muscleGroup}</Text>
+      <View className="mb-6 rounded-[32px] border border-white/5 bg-[#0B1220] p-6 shadow-2xl">
+        <View className="flex-row items-center justify-between">
+          <View>
+            <View className="mb-1 flex-row items-center gap-2">
+              <View className="rounded-full bg-amber-500/10 p-1.5">
+                <Activity size={14} color="#f59e0b" />
+              </View>
+              <Text className="text-xs font-bold uppercase tracking-[1px] text-slate-400">Volume totale</Text>
+            </View>
+            <Text className="text-4xl font-black tabular-nums tracking-tight text-white">
+              {totalVolume.toFixed(0)}
+              <Text className="text-xl font-bold text-slate-500"> kg</Text>
+            </Text>
+          </View>
+          <Pressable onPress={() => setExercisePickerOpen(true)} className="flex-row items-center gap-2 rounded-2xl bg-amber-500 px-4 py-3.5 shadow-sm active:opacity-80">
+            <Plus size={18} color="#020617" />
+            <Text className="font-bold text-slate-950">Esercizio</Text>
+          </Pressable>
+        </View>
+      </View>
 
-            {exercise.sets.map((set) => (
-              <View key={set.id} className="mb-3 rounded-xl border border-slate-700 bg-slate-800 p-3">
-                <View className="mb-2 flex-row items-center justify-between">
-                  <Text className="font-semibold text-white">Serie {set.setNumber}</Text>
-                  <Pressable onPress={() => updateSet(exercise.id, set.id, 'completed', !set.completed)} className={`rounded-full px-2 py-1 ${set.completed ? 'bg-green-500' : 'bg-slate-700'}`}>
-                    <Text className="text-xs font-semibold text-white">{set.completed ? 'Completata' : 'Da fare'}</Text>
+      <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
+        {exercises.map((exercise) => (
+          <View key={exercise.id} className="mb-6 overflow-hidden rounded-[32px] border border-white/5 bg-[#0B1220] shadow-lg">
+            <View className="flex-row items-center justify-between border-b border-slate-800/50 bg-[#0f172a]/50 p-5">
+              <View>
+                <Text className="text-xl font-bold text-white">{exercise.name}</Text>
+                <Text className="mt-1 text-sm font-medium text-slate-400">{exercise.muscleGroup}</Text>
+              </View>
+              <View className="rounded-full border border-slate-700/50 bg-slate-800/80 px-3 py-1.5">
+                <Text className="text-xs font-bold text-slate-300">{exercise.sets.length} SET</Text>
+              </View>
+            </View>
+
+            <View className="p-5">
+              {exercise.sets.map((set) => (
+                <View key={set.id} className="mb-4 rounded-2xl border border-slate-800/60 bg-[#0f172a] p-4">
+                  <View className="mb-4 flex-row items-center justify-between">
+                    <Text className="text-sm font-bold text-slate-300">Serie {set.setNumber}</Text>
+                    <Pressable
+                      onPress={() => updateSet(exercise.id, set.id, 'completed', !set.completed)}
+                      className={`flex-row items-center gap-1.5 rounded-full px-3 py-1.5 ${set.completed ? 'bg-emerald-500/20' : 'bg-slate-800'}`}
+                    >
+                      {set.completed && <Check size={12} color="#34d399" />}
+                      <Text className={`text-[10px] font-bold uppercase tracking-[1px] ${set.completed ? 'text-emerald-400' : 'text-slate-400'}`}>
+                        {set.completed ? 'Completata' : 'Da fare'}
+                      </Text>
+                    </Pressable>
+                  </View>
+
+                  <View className="flex-row">
+                    <View className="mr-3 flex-1">
+                      <Text className="mb-1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-slate-500">Peso (kg)</Text>
+                      <TextInput
+                        className="rounded-xl border border-slate-700/50 bg-slate-900/50 px-4 py-3 text-lg font-bold tabular-nums text-white"
+                        keyboardType="numeric"
+                        value={set.weight}
+                        onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
+                      />
+                    </View>
+                    <View className="mr-3 flex-1">
+                      <Text className="mb-1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-slate-500">Reps</Text>
+                      <TextInput
+                        className="rounded-xl border border-slate-700/50 bg-slate-900/50 px-4 py-3 text-lg font-bold tabular-nums text-white"
+                        keyboardType="numeric"
+                        value={set.reps}
+                        onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
+                      />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="mb-1.5 text-[10px] font-bold uppercase tracking-[1.5px] text-slate-500">RPE</Text>
+                      <TextInput
+                        className="rounded-xl border border-slate-700/50 bg-slate-900/50 px-4 py-3 text-lg font-bold tabular-nums text-white"
+                        keyboardType="numeric"
+                        value={set.rpe}
+                        onChangeText={(value) => updateSet(exercise.id, set.id, 'rpe', value)}
+                      />
+                    </View>
+                  </View>
+
+                  <Pressable onPress={() => removeSet(exercise.id, set.id)} className="mt-5 flex-row items-center justify-end gap-1.5">
+                    <Trash2 size={14} color="#f87171" />
+                    <Text className="text-xs font-semibold text-red-400">Rimuovi serie</Text>
                   </Pressable>
                 </View>
+              ))}
 
-                <View className="flex-row gap-2">
-                  <View className="mr-2 flex-1">
-                    <Text className="mb-1 text-xs text-slate-400">Peso</Text>
-                    <TextInput
-                      className="rounded-lg bg-slate-900 p-2 text-white"
-                      keyboardType="numeric"
-                      value={set.weight}
-                      onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
-                    />
-                  </View>
-                  <View className="mr-2 flex-1">
-                    <Text className="mb-1 text-xs text-slate-400">Reps</Text>
-                    <TextInput
-                      className="rounded-lg bg-slate-900 p-2 text-white"
-                      keyboardType="numeric"
-                      value={set.reps}
-                      onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
-                    />
-                  </View>
-                  <View className="flex-1">
-                    <Text className="mb-1 text-xs text-slate-400">RPE</Text>
-                    <TextInput
-                      className="rounded-lg bg-slate-900 p-2 text-white"
-                      keyboardType="numeric"
-                      value={set.rpe}
-                      onChangeText={(value) => updateSet(exercise.id, set.id, 'rpe', value)}
-                    />
-                  </View>
-                </View>
-
-                <Pressable onPress={() => removeSet(exercise.id, set.id)} className="mt-2">
-                  <Text className="text-right text-red-400">Rimuovi serie</Text>
-                </Pressable>
-              </View>
-            ))}
-
-            <Pressable onPress={() => addSet(exercise.id)} className="rounded-xl bg-slate-700 p-3">
-              <Text className="text-center font-semibold text-white">+ Aggiungi serie</Text>
-            </Pressable>
+              <Pressable onPress={() => addSet(exercise.id)} className="mt-2 flex-row items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-700/60 bg-slate-800/20 py-4 active:bg-slate-800/40">
+                <Plus size={16} color="#94a3b8" />
+                <Text className="font-bold text-slate-300">Aggiungi serie</Text>
+              </Pressable>
+            </View>
           </View>
         ))}
 
         {exercises.length === 0 && (
-          <View className="rounded-2xl border border-dashed border-slate-600 p-8">
-            <Text className="text-center text-slate-400">Nessun esercizio aggiunto. Inizia con una selezione dal catalogo.</Text>
+          <View className="mt-8 items-center justify-center rounded-[32px] border border-dashed border-slate-800 p-10">
+            <View className="mb-4 rounded-full bg-slate-900 p-4">
+              <Dumbbell size={32} color="#334155" />
+            </View>
+            <Text className="text-center text-lg font-bold text-slate-400">Inizia l'allenamento</Text>
+            <Text className="mt-2 text-center text-sm font-medium text-slate-500">Aggiungi il tuo primo esercizio premendo il pulsante in alto.</Text>
           </View>
         )}
       </ScrollView>
 
-      <Pressable onPress={saveSession} className="mt-4 rounded-xl bg-green-500 p-4">
-        <Text className="text-center text-lg font-bold text-white">Termina Allenamento</Text>
+      <Pressable onPress={saveSession} className="absolute bottom-6 left-5 right-5 flex-row items-center justify-center gap-2 rounded-[24px] bg-emerald-500 py-4 shadow-lg active:opacity-80">
+        <Check size={20} color="#020617" />
+        <Text className="text-lg font-bold text-slate-950">Termina Allenamento</Text>
       </Pressable>
 
       <ExercisePickerSheet visible={exercisePickerOpen} onClose={() => setExercisePickerOpen(false)} onSelect={addExercise} />
