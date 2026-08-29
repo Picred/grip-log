@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "GripLog",
+    "slug": "griplog",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "griplog",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.picred.griplog"
+    },
+    "android": {
+      "package": "com.picred.griplog",
+      "adaptiveIcon": {
+        "backgroundColor": "#0F172A",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": []
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-sqlite",
+      "expo-secure-store"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "griplog-mobile"
+      }
+    }
+  }
+}
