@@ -1,0 +1,10 @@
+export const migrateDatabase = async () => {};
+export const getExerciseCatalog = async () => [];
+export const createSession = async (session: any) => session.id ?? `${Date.now()}`;
+export const getPendingSyncRecords = async () => ({ sessions: [], exercises: [], sets: [] });
+export const markRecordSynced = async () => {};
+export const createExercise = async (exercise: any) => exercise.id ?? `${Date.now()}-${Math.random()}`;
+export const createSet = async (set: any) => set.id ?? `${Date.now()}-${Math.random()}`;
+export const getSessionHistory = async () => [];
+export const getPendingSyncCount = async () => 0;
+export const initDatabase = async () => {};
